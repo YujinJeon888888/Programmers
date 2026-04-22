@@ -1,64 +1,23 @@
 #include <string>
 #include <vector>
-#include <algorithm>
-using namespace std;
 
+using namespace std;
+//[긴 쪽]들을 한 군데로 몰고, [짧은 쪽]들을 다른 한 군데로 몰아서 각각의 최댓값을 구하면 끝
 int solution(vector<vector<int>> sizes) {
-    int answer = 0;
-    int n=sizes.size();
-    int maxLen=-1;
-    int maxI=-1;
-    bool isMaxHeight=false;
+    int maxLong=0;
+    int maxShort=0;
     
-    //가로 세로 중 max를 뽑기
-    for(int i=0;i<n;i++){
-        for(int j=0;j<2;j++){
-            if(maxLen<sizes[i][j]){
-                maxLen=sizes[i][j];
-                maxI=i;
-                if(j==1){
-                    isMaxHeight=true;
-                }
-                else{
-                    isMaxHeight=false;
-                }
-            }
-        }
+    for(auto& card: sizes){
+        //각 명함에서 긴 쪽과 짧은 쪽 구분
+        int longSide=max(card[0],card[1]);
+        int shortSide=min(card[0],card[1]);
+        
+        //긴쪽에서 가장 긴 애, 짧은쪽에서 가장 긴 애를 찾음
+        maxLong=max(maxLong,longSide);
+        maxShort=max(maxShort,shortSide);
     }
     
-    //max인 애 제외하고, 
-    if(isMaxHeight){
-        for(int i=0;i<n;i++){
-            if(i==maxI){
-                continue;
-            }
-            //가로가 세로보다 크면 스왑
-            if(sizes[i][0]>sizes[i][1]){
-                swap(sizes[i][0],sizes[i][1]);
-            }
-        }
-    }
-    else{
-        for(int i=0;i<n;i++){
-            if(i==maxI){
-                continue;
-            }
-            //세로가 가로보다 크면 스왑
-            if(sizes[i][0]<sizes[i][1]){
-                swap(sizes[i][0],sizes[i][1]);
-            }
-        }
-    }
     
-    //answer: 순회해서 가로max, 세로max 구하고 곱하기
-    int maxWid=-1;
-    int maxHei=-1;
-    for(int i=0;i<n;i++){
-        maxWid=max(maxWid,sizes[i][0]);
-        maxHei=max(maxHei,sizes[i][1]);
-    }
     
-    answer=maxHei*maxWid;
-    
-    return answer;
+    return maxLong*maxShort;
 }
